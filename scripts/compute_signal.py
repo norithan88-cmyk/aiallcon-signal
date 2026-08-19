@@ -92,7 +92,7 @@ def linear_regression_channel(closes, lookback):
     lower = mid - 2 * sigma
     latest = series[-1]
     position = (latest - mid) / sigma
-    return {"mid": mid, "upper": upper, "lower": lower, "sigma": sigma, "position": position, "slope": slope}
+    return {"mid": mid, "upper": upper, "lower": lower, "sigma": sigma, "position": position, "slope": slope, "intercept": intercept}
 
 
 def momentum_direction(ch):
@@ -248,6 +248,12 @@ def build_signal(out_path=None):
             }
             for tf in timeframes
         ],
+        "chart_data": {
+            "trigger": {"label": f"直近（{TRIGGER_LB}日）", "closes": closes[-TRIGGER_LB:], "intercept": ch_trigger["intercept"], "slope": ch_trigger["slope"], "sigma": ch_trigger["sigma"]} if ch_trigger else None,
+            "short": {"label": f"短期（{SHORT_LB}日）", "closes": closes[-SHORT_LB:], "intercept": ch_short["intercept"], "slope": ch_short["slope"], "sigma": ch_short["sigma"]} if ch_short else None,
+            "medium": {"label": f"中期（{MEDIUM_LB}日）", "closes": closes[-MEDIUM_LB:], "intercept": ch_medium["intercept"], "slope": ch_medium["slope"], "sigma": ch_medium["sigma"]} if ch_medium else None,
+            "long": {"label": f"長期（{LONG_LB}日）", "closes": closes[-LONG_LB:], "intercept": ch_long["intercept"], "slope": ch_long["slope"], "sigma": ch_long["sigma"]} if ch_long else None,
+        },
         "market_context": market_context,
         "disclaimer": (
             "本データはルールベースの参考情報であり、投資成果を保証するものではありません。"
